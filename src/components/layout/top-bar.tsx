@@ -6,6 +6,7 @@ import { Menu } from "lucide-react";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -34,6 +35,9 @@ export function TopBar() {
           <SheetContent side="left" className="w-[min(100%,20rem)] p-0">
             <SheetHeader className="sr-only">
               <SheetTitle>Candidates</SheetTitle>
+              <SheetDescription>
+                Search or pick a candidate to open their recruiter thread.
+              </SheetDescription>
             </SheetHeader>
             <CandidateSidebar className="h-full border-0" />
           </SheetContent>
