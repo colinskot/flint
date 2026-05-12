@@ -457,10 +457,10 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
         </SheetContent>
       </Sheet>
 
-      {/* Tablet/desktop */}
-      <div className="hidden border-t border-border bg-card px-4 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] shadow-[0_-8px_30px_-18px_rgba(68,55,109,0.35)] md:block md:px-6 md:py-4 md:pb-4">
-      <div className="mb-2 flex flex-wrap items-start justify-between gap-2 sm:mb-3 sm:items-center">
-        <div className="min-w-0 flex-1 basis-[min(100%,12rem)]">
+      {/* Tablet/desktop — compact footprint (mobile-inspired spacing) */}
+      <div className="hidden border-t border-border bg-card px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-[0_-8px_30px_-18px_rgba(68,55,109,0.35)] md:block md:px-5 md:py-3 md:pb-3">
+      <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2 md:mb-2">
+        <div className="min-w-0 flex-1 basis-[min(100%,12rem)] leading-tight">
           <p className="text-sm font-semibold text-foreground">Composer</p>
           <p
             className="truncate text-xs text-muted-foreground"
@@ -469,21 +469,21 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
             {candidate.phoneDisplay} · {candidate.email}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 type="button"
                 variant="secondary"
                 size="sm"
-                className="shrink-0 gap-1 rounded-xl px-2.5 py-1.5 text-xs sm:gap-1.5 sm:px-3 sm:text-sm"
+                className="h-8 gap-1 rounded-lg px-2.5 text-xs md:h-9 md:px-3 md:text-sm"
                 onClick={runAiAssist}
                 disabled={aiBusy}
               >
                 {aiBusy ? (
-                  <Loader2 className="size-3.5 animate-spin sm:size-4" aria-hidden />
+                  <Loader2 className="size-3.5 animate-spin md:size-4" aria-hidden />
                 ) : (
-                  <Sparkles className="size-3.5 sm:size-4" aria-hidden />
+                  <Sparkles className="size-3.5 md:size-4" aria-hidden />
                 )}
                 AI draft
               </Button>
@@ -496,40 +496,40 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
         </div>
       </div>
 
-      <Card className="rounded-2xl border-border bg-sidebar gap-2 p-3 sm:gap-4 sm:p-4">
-        <div className="mb-2 flex flex-col gap-2 sm:mb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-          <div className="space-y-1 sm:space-y-2">
-            <Label className="text-[10px] uppercase tracking-wide text-muted-foreground sm:text-xs">
+      <Card className="rounded-xl border-border bg-sidebar gap-2 p-2.5 md:rounded-2xl md:p-3">
+        <div className="mb-1.5 flex flex-col gap-1 md:mb-2 md:flex-row md:items-center md:justify-between md:gap-3">
+          <div className="space-y-0.5 md:space-y-1">
+            <Label className="text-[10px] uppercase tracking-wide text-muted-foreground md:text-[11px]">
               Draft tone (AI)
             </Label>
             <RadioGroup
               value={tone}
               onValueChange={(v: MessageTone) => { setTone(v); }}
-              className="flex flex-wrap gap-x-3 gap-y-1 sm:gap-x-4 sm:gap-y-0"
+              className="flex flex-wrap gap-x-3 gap-y-0 md:gap-x-4"
             >
-              <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="flex items-center gap-1.5 md:gap-2">
                 <RadioGroupItem id="tone-pro" value="professional" />
                 <Label
                   htmlFor="tone-pro"
-                  className="text-xs font-normal sm:text-sm"
+                  className="text-xs font-normal md:text-[13px]"
                 >
                   Professional
                 </Label>
               </div>
-              <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="flex items-center gap-1.5 md:gap-2">
                 <RadioGroupItem id="tone-fr" value="friendly" />
                 <Label
                   htmlFor="tone-fr"
-                  className="text-xs font-normal sm:text-sm"
+                  className="text-xs font-normal md:text-[13px]"
                 >
                   Friendly
                 </Label>
               </div>
-              <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="flex items-center gap-1.5 md:gap-2">
                 <RadioGroupItem id="tone-urg" value="urgent" />
                 <Label
                   htmlFor="tone-urg"
-                  className="text-xs font-normal sm:text-sm"
+                  className="text-xs font-normal md:text-[13px]"
                 >
                   Urgent
                 </Label>
@@ -539,32 +539,32 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid h-auto w-full grid-cols-3 gap-0 rounded-xl bg-muted/80 p-[3px]">
+          <TabsList className="grid h-8 w-full grid-cols-3 gap-0 rounded-lg bg-muted/80 p-[2px] md:h-9 md:rounded-xl md:p-[3px]">
             <TabsTrigger
               value="sms"
-              className="rounded-lg px-2 py-1 text-xs sm:px-1.5 sm:py-0.5 sm:text-sm"
+              className="rounded-md px-2 py-0 text-xs md:rounded-lg md:text-sm"
             >
               SMS
             </TabsTrigger>
             <TabsTrigger
               value="email"
-              className="rounded-lg px-2 py-1 text-xs sm:px-1.5 sm:py-0.5 sm:text-sm"
+              className="rounded-md px-2 py-0 text-xs md:rounded-lg md:text-sm"
             >
               Email
             </TabsTrigger>
             <TabsTrigger
               value="call"
-              className="gap-1 rounded-lg px-2 py-1 text-xs sm:gap-1.5 sm:px-1.5 sm:py-0.5 sm:text-sm"
+              className="gap-1 rounded-md px-2 py-0 text-xs md:rounded-lg md:gap-1.5 md:text-sm"
             >
-              <Phone className="size-3 sm:size-3.5" aria-hidden />
+              <Phone className="size-3 md:size-3.5" aria-hidden />
               Call
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="sms" className="mt-2 space-y-2 sm:mt-4 sm:space-y-3">
-            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+          <TabsContent value="sms" className="mt-2 space-y-2 md:mt-2.5">
+            <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center">
               <Select onValueChange={applyTemplateSms}>
-                <SelectTrigger className="min-w-0 w-full rounded-xl sm:w-[220px] sm:max-w-none">
+                <SelectTrigger className="min-h-9 min-w-0 w-full rounded-xl md:max-w-[220px]">
                   <SelectValue placeholder="Insert template" />
                 </SelectTrigger>
                 <SelectContent>
@@ -575,7 +575,7 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
                   ))}
                 </SelectContent>
               </Select>
-              <p className="text-[11px] text-muted-foreground sm:self-center sm:text-xs">
+              <p className="text-[11px] text-muted-foreground md:self-center md:text-xs">
                 ~{smsMeta.segments} segment{smsMeta.segments === 1 ? "" : "s"}{" "}
                 ({smsMeta.segSize}-char units)
               </p>
@@ -584,14 +584,14 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
               value={smsBody}
               onChange={(e) => { setSmsBody(e.target.value); }}
               placeholder="Write a concise SMS…"
-              rows={3}
-              className="min-h-[80px] rounded-2xl border-border text-sm leading-snug sm:min-h-[112px]"
+              rows={2}
+              className="min-h-[72px] rounded-xl border-border py-2.5 text-sm leading-snug md:min-h-[88px] md:rounded-2xl"
               aria-label="SMS message body"
             />
             <div className="flex justify-end">
               <Button
                 type="button"
-                className="h-9 rounded-xl px-3 text-xs sm:h-10 sm:px-4 sm:text-sm"
+                className="h-8 rounded-lg px-3 text-xs md:h-9 md:rounded-xl md:text-sm"
                 onClick={submitSms}
               >
                 Send SMS (demo)
@@ -599,12 +599,9 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
             </div>
           </TabsContent>
 
-          <TabsContent
-            value="email"
-            className="mt-2 space-y-2 sm:mt-4 sm:space-y-3"
-          >
+          <TabsContent value="email" className="mt-2 space-y-2 md:mt-2.5">
             <Select onValueChange={applyTemplateEmail}>
-              <SelectTrigger className="w-full rounded-xl sm:max-w-sm">
+              <SelectTrigger className="min-h-9 w-full rounded-xl md:max-w-sm">
                 <SelectValue placeholder="Insert template" />
               </SelectTrigger>
               <SelectContent>
@@ -626,17 +623,17 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
               value={emailBody}
               onChange={(e) => { setEmailBody(e.target.value); }}
               placeholder="Email body"
-              rows={5}
-              className="min-h-[128px] rounded-2xl border-border text-sm leading-snug sm:min-h-[200px]"
+              rows={4}
+              className="min-h-[120px] rounded-xl border-border py-2.5 text-sm leading-snug md:min-h-[150px] md:rounded-2xl"
               aria-label="Email body"
             />
-            <p className="text-[11px] text-muted-foreground sm:text-xs">
+            <p className="text-[11px] leading-snug text-muted-foreground md:text-xs">
               Attachments are disabled in Phase 1 — README explains why.
             </p>
             <div className="flex justify-end">
               <Button
                 type="button"
-                className="h-9 rounded-xl px-3 text-xs sm:h-10 sm:px-4 sm:text-sm"
+                className="h-8 rounded-lg px-3 text-xs md:h-9 md:rounded-xl md:text-sm"
                 onClick={submitEmail}
               >
                 Send email (demo)
@@ -644,8 +641,8 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
             </div>
           </TabsContent>
 
-          <TabsContent value="call" className="mt-2 space-y-2 sm:mt-4">
-            <Separator className="mb-3 sm:mb-4" />
+          <TabsContent value="call" className="mt-2 space-y-2 md:mt-2.5">
+            <Separator className="mb-2 md:mb-2.5" />
             <CallSimulator candidate={candidate} />
           </TabsContent>
         </Tabs>
