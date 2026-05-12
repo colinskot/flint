@@ -10,9 +10,17 @@ Share the repo with **`@heliobentes`** (GitHub) per the take-home instructions.
 
 ## Quick start
 
+This repo uses **`pnpm`** (see [`package.json`](package.json) `packageManager` field). Enable Corepack once if your Node toolchain supports it:
+
 ```bash
-npm install
-npm run dev
+corepack enable
+```
+
+Then install and run locally:
+
+```bash
+pnpm install
+pnpm dev
 ```
 
 Visit `http://localhost:3000` — routes through `/candidates` into the first seeded thread.
@@ -20,9 +28,11 @@ Visit `http://localhost:3000` — routes through `/candidates` into the first se
 Production build locally:
 
 ```bash
-npm run build
-npm run start
+pnpm build
+pnpm start
 ```
+
+> **pnpm 11 + native deps:** Lifecycle scripts for packages like **`sharp`** are allowed via [`pnpm-workspace.yaml`](pnpm-workspace.yaml) `allowBuilds`. If `pnpm install` reports new blocked builds, approve with `pnpm approve-builds <package>` (or revisit that file).
 
 ---
 
@@ -33,6 +43,7 @@ npm run start
 - **Tailwind CSS v4** (`@tailwindcss/postcss`)
 - **shadcn/ui** primitives (Radix + CSS variables theme)
 - **Vercel AI SDK** (`ai`, `@ai-sdk/openai`) for the optional drafting route
+- **pnpm** for installs and locks ([`pnpm-lock.yaml`](pnpm-lock.yaml))
 
 ---
 
@@ -85,7 +96,7 @@ cp .env.example .env.local
 ## Deploying on Vercel
 
 1. Push this repo to GitHub.
-2. Import in Vercel (framework preset detects Next.js).
+2. Import in Vercel (framework preset detects Next.js; **`pnpm`** is inferred from **`pnpm-lock.yaml`**).
 3. Add env var **`OPENAI_API_KEY`** _(optional)_ for live AI drafts; optional without it thanks to fallback drafts.
 4. Deploy — drop the canonical URL near the top of this README once ready.
 
@@ -103,16 +114,17 @@ cp .env.example .env.local
 
 | Command | Description |
 | --- | --- |
-| `npm run dev` | Local dev (`next dev`) |
-| `npm run build` | Production compilation |
-| `npm run start` | Serve `.next` output |
-| `npm run lint` | ESLint |
+| `pnpm dev` | Local dev (`next dev`) |
+| `pnpm build` | Production compilation |
+| `pnpm start` | Serve `.next` output |
+| `pnpm lint` | ESLint |
 
 ---
 
 ## Project structure highlights
 
 ```
+pnpm-workspace.yaml    pnpm allowBuilds for native toolchain deps (e.g. sharp)
 src/app/(app)          recruiter shell routes
 src/app/api/compose    AI + fallback drafting
 src/components/        layout, timeline, composers
