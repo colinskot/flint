@@ -30,8 +30,8 @@ export function CallSimulator({ candidate }: { candidate: Candidate }) {
 
   useEffect(() => {
     if (phase !== "active") return;
-    const id = window.setInterval(() => setElapsed((s) => s + 1), 1000);
-    return () => window.clearInterval(id);
+    const id = window.setInterval(() => { setElapsed((s) => s + 1); }, 1000);
+    return () => { window.clearInterval(id); };
   }, [phase]);
 
   const press = (d: string) => {
@@ -91,7 +91,7 @@ export function CallSimulator({ candidate }: { candidate: Candidate }) {
               type="button"
               variant="outline"
               className="h-11 rounded-2xl text-base"
-              onClick={() => press(d)}
+              onClick={() => { press(d); }}
               disabled={phase === "active" || phase === "ended"}
             >
               {d}
@@ -141,7 +141,7 @@ export function CallSimulator({ candidate }: { candidate: Candidate }) {
         </Label>
         <Select
           value={disposition}
-          onValueChange={(v: typeof disposition) => setDisposition(v)}
+          onValueChange={(v: typeof disposition) => { setDisposition(v); }}
         >
           <SelectTrigger className="mt-2 rounded-xl">
             <SelectValue />
@@ -155,7 +155,7 @@ export function CallSimulator({ candidate }: { candidate: Candidate }) {
         </Select>
         <Textarea
           value={notes}
-          onChange={(e) => setNotes(e.target.value)}
+          onChange={(e) => { setNotes(e.target.value); }}
           placeholder="Disposition notes visible on the timeline…"
           className="mt-3 rounded-2xl"
           rows={5}

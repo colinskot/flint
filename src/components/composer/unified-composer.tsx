@@ -249,7 +249,7 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
             <button
               key={id}
               type="button"
-              onClick={() => pickChannel(id)}
+              onClick={() => { pickChannel(id); }}
               className={cn(
                 "flex flex-1 items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-medium transition-colors",
                 activeTab === id
@@ -273,9 +273,9 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
             {activeTab === "email" && (
               <Input
                 value={emailSubject}
-                onChange={(e) => setEmailSubject(e.target.value)}
+                onChange={(e) => { setEmailSubject(e.target.value); }}
                 placeholder="Subject"
-                className="mt-2 h-9 rounded-xl text-sm"
+                className="mt-2 rounded-xl"
                 aria-label="Email subject"
               />
             )}
@@ -295,19 +295,19 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
               {activeTab === "sms" ? (
                 <Textarea
                   value={smsBody}
-                  onChange={(e) => setSmsBody(e.target.value)}
+                  onChange={(e) => { setSmsBody(e.target.value); }}
                   placeholder="Message…"
                   rows={1}
-                  className="max-h-[132px] min-h-[44px] flex-1 resize-none rounded-2xl border-border py-2.5 text-sm leading-snug field-sizing-content"
+                  className="max-h-[132px] min-h-[44px] flex-1 resize-none rounded-2xl border-border text-sm leading-snug field-sizing-content"
                   aria-label="SMS message body"
                 />
               ) : (
                 <Textarea
                   value={emailBody}
-                  onChange={(e) => setEmailBody(e.target.value)}
+                  onChange={(e) => { setEmailBody(e.target.value); }}
                   placeholder="Write email…"
                   rows={3}
-                  className="max-h-[160px] min-h-[72px] flex-1 resize-none rounded-2xl border-border py-2 text-sm leading-snug"
+                  className="max-h-[160px] min-h-[72px] flex-1 resize-none rounded-2xl border-border text-sm leading-snug"
                   aria-label="Email body"
                 />
               )}
@@ -339,7 +339,7 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
                   </Label>
                   <RadioGroup
                     value={tone}
-                    onValueChange={(v: MessageTone) => setTone(v)}
+                    onValueChange={(v: MessageTone) => { setTone(v); }}
                     className="flex flex-wrap gap-x-4 gap-y-2"
                   >
                     <div className="flex items-center gap-2">
@@ -504,7 +504,7 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
             </Label>
             <RadioGroup
               value={tone}
-              onValueChange={(v: MessageTone) => setTone(v)}
+              onValueChange={(v: MessageTone) => { setTone(v); }}
               className="flex flex-wrap gap-x-3 gap-y-1 sm:gap-x-4 sm:gap-y-0"
             >
               <div className="flex items-center gap-1.5 sm:gap-2">
@@ -582,10 +582,10 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
             </div>
             <Textarea
               value={smsBody}
-              onChange={(e) => setSmsBody(e.target.value)}
+              onChange={(e) => { setSmsBody(e.target.value); }}
               placeholder="Write a concise SMS…"
               rows={3}
-              className="min-h-[80px] rounded-2xl border-border py-2 text-sm leading-snug sm:min-h-[112px] sm:py-3"
+              className="min-h-[80px] rounded-2xl border-border text-sm leading-snug sm:min-h-[112px]"
               aria-label="SMS message body"
             />
             <div className="flex justify-end">
@@ -617,17 +617,17 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
             </Select>
             <Input
               value={emailSubject}
-              onChange={(e) => setEmailSubject(e.target.value)}
+              onChange={(e) => { setEmailSubject(e.target.value); }}
               placeholder="Subject line"
               className="rounded-xl"
               aria-label="Email subject"
             />
             <Textarea
               value={emailBody}
-              onChange={(e) => setEmailBody(e.target.value)}
+              onChange={(e) => { setEmailBody(e.target.value); }}
               placeholder="Email body"
               rows={5}
-              className="min-h-[128px] rounded-2xl border-border py-2 text-sm leading-snug sm:min-h-[200px] sm:py-3"
+              className="min-h-[128px] rounded-2xl border-border text-sm leading-snug sm:min-h-[200px]"
               aria-label="Email body"
             />
             <p className="text-[11px] text-muted-foreground sm:text-xs">
