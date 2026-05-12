@@ -97,4 +97,40 @@
   html {
     @apply font-sans;
   }
+
+  /**
+   * Clickable affordance: pointer on interactive primitives (buttons, links,
+   * form controls, common Radix/shadcn roles). Disabled / inert → not-allowed.
+   */
+  :where(
+    button,
+    summary,
+    a[href],
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"],
+    input[type="checkbox"],
+    input[type="radio"],
+    input[type="file"],
+    select,
+    [role="button"],
+    [role="link"],
+    [role="menuitem"],
+    [role="menuitemcheckbox"],
+    [role="menuitemradio"],
+    [role="option"],
+    [role="radio"],
+    [role="checkbox"],
+    [role="switch"],
+    [role="tab"],
+    label[for]
+  ):not(:disabled):not([data-disabled]):not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  :where(button, input, select, textarea):disabled,
+  [data-disabled],
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
 }
