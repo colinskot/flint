@@ -1,5 +1,5 @@
 import { openai } from "@ai-sdk/openai";
-import { generateObject } from "ai";
+import { generateText, Output } from "ai";
 import { z } from "zod";
 
 const bodySchema = z.object({
@@ -59,8 +59,13 @@ function fallbackDraft(
 }
 
 export async function POST(req: Request) {
-  const json = await req.json().catch(() => null);
-  const parsed = bodySchema.safeParse(json);
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    body = null;
+  }
+  const parsed = bodySchema.safeParse(body);
   if (!parsed.success) {
     return Response.json({ error: "Invalid payload" }, { status: 400 });
   }
@@ -79,9 +84,13 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { object } = await generateObject({
+    const { output } = await generateText({
       model: openai("gpt-4o-mini"),
-      schema: responseSchema,
+      output: Output.object({
+        schema: responseSchema,
+        name: "compose_draft",
+        description: "Recruiter SMS or email draft fields",
+      }),
       prompt: `
 You draft recruiter outreach for Flint Healthcare (visa-friendly nursing placement).
 Tone: "${data.tone}".
@@ -103,7 +112,7 @@ Do not include PHI; do not invent real hospitals.
 `.trim(),
     });
 
-    const cleaned = responseSchema.safeParse(object);
+    const cleaned = responseSchema.safeParse(output);
     if (!cleaned.success || !looksUseful(data.channel, cleaned.data)) {
       return Response.json({ ...fallbackDraft(data), fallback: true });
     }
