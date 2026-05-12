@@ -18,7 +18,7 @@ export function TopBar() {
   const { resetDemo } = usePortal();
 
   return (
-    <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border bg-card px-4 py-3 md:px-6">
+    <header className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-4 py-2 md:gap-4 md:px-6 md:py-3">
       <div className="flex min-w-0 items-center gap-3 md:gap-4">
         <Sheet>
           <SheetTrigger asChild>
