@@ -37,10 +37,10 @@ function readAndCacheFromDOM(): TimelineMessage[] {
 }
 
 export function subscribeUserTimeline(onStoreChange: () => void) {
-  if (typeof window === "undefined") return () => {};
-  const handler = () => onStoreChange();
+  if (typeof window === "undefined") return () => undefined;
+  const handler = () => { onStoreChange(); };
   window.addEventListener(STORAGE_EVENT, handler);
-  return () => window.removeEventListener(STORAGE_EVENT, handler);
+  return () => { window.removeEventListener(STORAGE_EVENT, handler); };
 }
 
 export function loadUserMessages(): TimelineMessage[] {

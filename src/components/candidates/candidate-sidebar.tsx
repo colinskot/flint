@@ -2,6 +2,7 @@
 
 import { DEMO_NOW_MS, SEED_CANDIDATES } from "@/data/seed";
 import { usePortal } from "@/context/portal-context";
+import type { TimelineMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -24,15 +25,23 @@ const statusVariant = {
 };
 
 function initials(first: string, last: string) {
-  return `${first[0] ?? ""}${last[0] ?? ""}`.toUpperCase();
+  return `${first.slice(0, 1)}${last.slice(0, 1)}`.toUpperCase();
 }
 
 function formatRelativeDemo(iso: string) {
   const diffMs = DEMO_NOW_MS - new Date(iso).getTime();
   const h = Math.floor(diffMs / (1000 * 60 * 60));
-  if (h < 24) return `${Math.max(1, h)}h ago`;
+  if (h < 24) return `${String(Math.max(1, h))}h ago`;
   const days = Math.floor(h / 24);
-  return `${days}d ago`;
+  return `${String(days)}d ago`;
+}
+
+function lastMessagePreview(last: TimelineMessage) {
+  const text =
+    [last.subject, last.body, last.disposition].find(
+      (v) => typeof v === "string" && v.trim().length > 0,
+    ) ?? "Call";
+  return `${last.kind.toUpperCase()} · ${text}`;
 }
 
 export function CandidateSidebar({ className }: { className?: string }) {
@@ -57,7 +66,7 @@ export function CandidateSidebar({ className }: { className?: string }) {
         </p>
         <Input
           value={q}
-          onChange={(e) => setQ(e.target.value)}
+          onChange={(e) => { setQ(e.target.value); }}
           placeholder="Search name, license, specialty…"
           aria-label="Search candidates"
           className="mt-3 rounded-xl border-border bg-card"
@@ -96,11 +105,7 @@ export function CandidateSidebar({ className }: { className?: string }) {
                       {c.specialty} · {c.licenseState}
                     </p>
                     <p className="truncate text-xs text-muted-foreground">
-                      {last
-                        ? last.kind.toUpperCase() +
-                          " · " +
-                          (last.subject || last.body || last.disposition || "Call")
-                        : "No thread yet"}
+                      {last ? lastMessagePreview(last) : "No thread yet"}
                     </p>
                     <p className="text-[10px] text-muted-foreground">
                       Updated {formatRelativeDemo(c.lastTouchAt)}

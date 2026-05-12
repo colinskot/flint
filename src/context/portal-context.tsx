@@ -16,14 +16,14 @@ import {
 } from "@/lib/storage";
 import { messagesForCandidate } from "@/lib/messages-merge";
 
-type PortalContextValue = {
+interface PortalContextValue {
   seedTimeline: TimelineMessage[];
   userMessages: TimelineMessage[];
   allMessages: TimelineMessage[];
   messagesFor: (candidateId: string) => TimelineMessage[];
   appendMessage: (msg: TimelineMessage) => void;
   resetDemo: () => void;
-};
+}
 
 const PortalContext = createContext<PortalContextValue | null>(null);
 
