@@ -2,7 +2,11 @@
 
 Frontend-only recruiter workspace that lets Flint-style recruiters converse with nurse candidates via **SMS**, **email**, and **simulated phone calls**. Outbound integrations (Twilio, SMTP, VoIP) are intentionally stubbed — this milestone optimizes for **interaction design**, **workflow clarity**, and a deployable demo.
 
-Live demo _(update after deploying to Vercel)_: **`https://YOUR-PROJECT.vercel.app`**
+Live demo (**production**): **`https://flint-revery-trail.vercel.app`**
+
+Alternative production aliases resolve to the same deployment: **`https://flint-kohl.vercel.app`** · **`https://flint-colinskot-revery-trail.vercel.app`**.
+
+Inspect deployment: [Vercel — revery-trail/flint](https://vercel.com/revery-trail/flint/9KkVVuJ1CwY33bP6XZKjR42uw2Tw).
 
 Share the repo with **`@heliobentes`** (GitHub) per the take-home instructions.
 
