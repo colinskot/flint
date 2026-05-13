@@ -9,6 +9,15 @@ export type CandidatesListSort =
   | "specialty_asc"
   | "license_asc";
 
+export const CANDIDATES_SORT_LABELS: Record<CandidatesListSort, string> = {
+  last_touch_desc: "Last updated · newest",
+  last_touch_asc: "Last updated · oldest",
+  name_asc: "Name · A → Z",
+  name_desc: "Name · Z → A",
+  specialty_asc: "Specialty · A → Z",
+  license_asc: "License state · A → Z",
+};
+
 export interface CandidatesListCriteria {
   query: string;
   status: CandidateStatus | "all";

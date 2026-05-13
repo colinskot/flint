@@ -3,6 +3,7 @@
 import { DEMO_NOW_MS, SEED_CANDIDATES } from "@/data/seed";
 import {
   candidatesFilterOptions,
+  CANDIDATES_SORT_LABELS,
   DEFAULT_CANDIDATES_LIST_CRITERIA,
   filterSortCandidates,
   type CandidatesListSort,
@@ -35,15 +36,6 @@ const statusVariant = {
   new: "secondary" as const,
   active: "default" as const,
   waiting: "outline" as const,
-};
-
-const sortLabels: Record<CandidatesListSort, string> = {
-  last_touch_desc: "Last updated · newest",
-  last_touch_asc: "Last updated · oldest",
-  name_asc: "Name · A → Z",
-  name_desc: "Name · Z → A",
-  specialty_asc: "Specialty · A → Z",
-  license_asc: "License state · A → Z",
 };
 
 function initials(first: string, last: string) {
@@ -212,9 +204,9 @@ export function CandidatesDirectory() {
                     <SelectValue placeholder="Sort" />
                   </SelectTrigger>
                   <SelectContent>
-                    {(Object.keys(sortLabels) as CandidatesListSort[]).map((key) => (
+                    {(Object.keys(CANDIDATES_SORT_LABELS) as CandidatesListSort[]).map((key) => (
                       <SelectItem key={key} value={key}>
-                        {sortLabels[key]}
+                        {CANDIDATES_SORT_LABELS[key]}
                       </SelectItem>
                     ))}
                   </SelectContent>

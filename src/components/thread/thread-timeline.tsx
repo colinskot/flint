@@ -1,17 +1,15 @@
 "use client";
 
-import type { Candidate, TimelineMessage } from "@/lib/types";
+import type { TimelineMessage } from "@/lib/types";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import {
   Phone,
@@ -177,67 +175,51 @@ function MessageBubble({
 }
 
 export function ThreadTimeline({
-  candidate,
   messages,
 }: {
-  candidate: Candidate;
   messages: TimelineMessage[];
 }) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-t border-border/60 bg-[var(--canvas)]">
-      <div className="border-b border-border bg-card/90 px-4 py-2 md:px-6 md:py-3">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-muted/25">
+      <div className="shrink-0 px-4 py-2.5 md:px-5 md:py-3">
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              Activity · messages & calls
-            </p>
-            <h2 className="mt-0.5 truncate text-sm font-semibold text-foreground md:text-base">
-              Conversation with{" "}
-              <span className="text-primary">
-                {candidate.firstName} {candidate.lastName}
-              </span>
-            </h2>
-            <p className="mt-1 text-[11px] leading-snug text-muted-foreground md:text-xs">
-              Chronological transcript (SMS, email stubs, simulated calls). Compose below when you&apos;re ready to
-              reach out — detail lives in the profile card above.
-            </p>
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Activity</p>
+              {messages.length > 0 ? (
+                <span className="text-[11px] text-muted-foreground tabular-nums">
+                  {messages.length} {messages.length === 1 ? "event" : "events"}
+                </span>
+              ) : null}
+            </div>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          <Popover>
+            <PopoverTrigger asChild>
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 size="icon-sm"
-                className="shrink-0 rounded-xl md:hidden"
-                aria-label="Candidate contact snapshot"
+                className="shrink-0 rounded-xl text-muted-foreground hover:text-foreground"
+                aria-label="About this activity feed"
               >
                 <Info className="size-4" aria-hidden />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-72">
-              <DropdownMenuLabel>Contact</DropdownMenuLabel>
-              <div className="space-y-1 px-2 pb-2 text-xs text-muted-foreground">
-                <p>{candidate.phoneDisplay}</p>
-                <p className="break-all">{candidate.email}</p>
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuLabel>Profile</DropdownMenuLabel>
-              <div className="space-y-1 px-2 pb-2 text-xs text-muted-foreground">
-                <p>{candidate.specialty}</p>
-                <p>{candidate.licenseState}</p>
-                <p>{candidate.timezone.replaceAll("_", " ")}</p>
-              </div>
-              <DropdownMenuSeparator />
-              <p className="px-2 pb-2 text-[11px] leading-snug text-muted-foreground">
-                Demo workspace — data is synthetic. No PHI, no outbound carrier
-                integration.
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-80 space-y-2">
+              <p className="text-sm font-medium text-foreground">What you&apos;re seeing</p>
+              <p className="text-xs leading-snug text-muted-foreground">
+                A single chronological thread: SMS, email, and logged calls. Compose replies from the panel below.
+                Contact details live under <span className="font-medium text-foreground">Contact</span> in the header.
               </p>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <p className="text-[11px] leading-snug text-muted-foreground">
+                Demo only — synthetic data, no PHI, no outbound integrations.
+              </p>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
       <ScrollArea className="min-h-0 flex-1">
-        <div className="space-y-3 px-4 py-3 md:space-y-4 md:px-6 md:py-5">
+        <div className="space-y-3 px-4 py-3 md:space-y-4 md:px-5 md:py-4">
           {messages.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               No conversation yet — send an SMS or email, or simulate a call.

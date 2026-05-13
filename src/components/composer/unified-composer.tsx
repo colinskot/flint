@@ -26,6 +26,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import {
   Loader2,
@@ -34,6 +39,7 @@ import {
   Mail,
   MessageSquare,
   SendHorizontal,
+  SlidersHorizontal,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useCallback, useMemo, useState } from "react";
@@ -235,9 +241,9 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
   }, []);
 
   return (
-    <>
+    <div className="bg-card">
       {/* Mobile: single-line-style input row; tone/templates/AI live in a sheet; call uses a keypad sheet */}
-      <div className="border-t border-border bg-card px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-[0_-8px_30px_-18px_rgba(68,55,109,0.35)] md:hidden">
+      <div className="px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:hidden">
         <div className="flex gap-0.5 rounded-xl bg-muted/80 p-[3px]">
           {(
             [
@@ -458,7 +464,7 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
       </Sheet>
 
       {/* Tablet/desktop — compact footprint (mobile-inspired spacing) */}
-      <div className="hidden border-t border-border bg-card px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-[0_-8px_30px_-18px_rgba(68,55,109,0.35)] md:block md:px-5 md:py-3 md:pb-3">
+      <div className="hidden px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:block md:px-5 md:py-3 md:pb-3">
       <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2 md:mb-2">
         <div className="min-w-0 flex-1 basis-[min(100%,12rem)] leading-tight">
           <p className="text-sm font-semibold text-foreground">Composer</p>
@@ -469,14 +475,111 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
             {candidate.phoneDisplay} · {candidate.email}
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
+        <div
+          data-slot="button-group"
+          role="group"
+          aria-label="Draft tools"
+          className="inline-flex shrink-0 items-stretch divide-x divide-border overflow-hidden rounded-lg border border-border bg-background shadow-sm md:rounded-xl"
+        >
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1.5 rounded-none rounded-l-lg border-0 px-2.5 text-xs shadow-none md:h-9 md:gap-2 md:rounded-l-xl md:px-3 md:text-sm"
+              >
+                <SlidersHorizontal className="size-3.5 md:size-4" aria-hidden />
+                Draft options
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 space-y-4" align="end">
+              <div className="space-y-2">
+                <Label className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                  Draft tone (AI)
+                </Label>
+                <RadioGroup
+                  value={tone}
+                  onValueChange={(v: MessageTone) => {
+                    setTone(v);
+                  }}
+                  className="flex flex-col gap-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem id="tone-pro-pop" value="professional" />
+                    <Label htmlFor="tone-pro-pop" className="text-sm font-normal">
+                      Professional
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem id="tone-fr-pop" value="friendly" />
+                    <Label htmlFor="tone-fr-pop" className="text-sm font-normal">
+                      Friendly
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem id="tone-urg-pop" value="urgent" />
+                    <Label htmlFor="tone-urg-pop" className="text-sm font-normal">
+                      Urgent
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              <Separator />
+              {activeTab === "sms" ? (
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground">Template</Label>
+                  <Select onValueChange={applyTemplateSms}>
+                    <SelectTrigger className="w-full rounded-xl">
+                      <SelectValue placeholder="Insert template" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SMS_TEMPLATES.map((t) => (
+                        <SelectItem key={t.label} value={t.label}>
+                          {t.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-[11px] text-muted-foreground">
+                    ~{smsMeta.segments} segment{smsMeta.segments === 1 ? "" : "s"} ({smsMeta.segSize}-char units)
+                  </p>
+                </div>
+              ) : null}
+              {activeTab === "email" ? (
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground">Template</Label>
+                  <Select onValueChange={applyTemplateEmail}>
+                    <SelectTrigger className="w-full rounded-xl">
+                      <SelectValue placeholder="Insert template" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {EMAIL_TEMPLATES.map((t) => (
+                        <SelectItem key={t.label} value={t.label}>
+                          {t.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-[11px] leading-snug text-muted-foreground">
+                    Attachments are disabled in Phase 1 — README explains why.
+                  </p>
+                </div>
+              ) : null}
+              {activeTab === "call" ? (
+                <p className="text-xs text-muted-foreground">
+                  Switch to SMS or Email to pick templates and tone for AI drafts.
+                </p>
+              ) : null}
+            </PopoverContent>
+          </Popover>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 type="button"
-                variant="secondary"
+                variant="outline"
                 size="sm"
-                className="h-8 gap-1 rounded-lg px-2.5 text-xs md:h-9 md:px-3 md:text-sm"
+                className="h-8 gap-1 rounded-none rounded-r-lg border-0 px-2.5 text-xs shadow-none md:h-9 md:rounded-r-xl md:px-3 md:text-sm"
                 onClick={runAiAssist}
                 disabled={aiBusy}
               >
@@ -496,48 +599,7 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
         </div>
       </div>
 
-      <Card className="rounded-xl border-border bg-sidebar gap-2 p-2.5 md:rounded-2xl md:p-3">
-        <div className="mb-1.5 flex flex-col gap-1 md:mb-2 md:flex-row md:items-center md:justify-between md:gap-3">
-          <div className="space-y-0.5 md:space-y-1">
-            <Label className="text-[10px] uppercase tracking-wide text-muted-foreground md:text-[11px]">
-              Draft tone (AI)
-            </Label>
-            <RadioGroup
-              value={tone}
-              onValueChange={(v: MessageTone) => { setTone(v); }}
-              className="flex flex-wrap gap-x-3 gap-y-0 md:gap-x-4"
-            >
-              <div className="flex items-center gap-1.5 md:gap-2">
-                <RadioGroupItem id="tone-pro" value="professional" />
-                <Label
-                  htmlFor="tone-pro"
-                  className="text-xs font-normal md:text-[13px]"
-                >
-                  Professional
-                </Label>
-              </div>
-              <div className="flex items-center gap-1.5 md:gap-2">
-                <RadioGroupItem id="tone-fr" value="friendly" />
-                <Label
-                  htmlFor="tone-fr"
-                  className="text-xs font-normal md:text-[13px]"
-                >
-                  Friendly
-                </Label>
-              </div>
-              <div className="flex items-center gap-1.5 md:gap-2">
-                <RadioGroupItem id="tone-urg" value="urgent" />
-                <Label
-                  htmlFor="tone-urg"
-                  className="text-xs font-normal md:text-[13px]"
-                >
-                  Urgent
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
-        </div>
-
+      <Card className="rounded-xl border-border/80 bg-muted/40 gap-2 p-2.5 shadow-none md:rounded-2xl md:p-3">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid h-8 w-full grid-cols-3 gap-0 rounded-lg bg-muted/80 p-[2px] md:h-9 md:rounded-xl md:p-[3px]">
             <TabsTrigger
@@ -562,24 +624,9 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
           </TabsList>
 
           <TabsContent value="sms" className="mt-2 space-y-2 md:mt-2.5">
-            <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center">
-              <Select onValueChange={applyTemplateSms}>
-                <SelectTrigger className="min-h-9 min-w-0 w-full rounded-xl md:max-w-[220px]">
-                  <SelectValue placeholder="Insert template" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SMS_TEMPLATES.map((t) => (
-                    <SelectItem key={t.label} value={t.label}>
-                      {t.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-[11px] text-muted-foreground md:self-center md:text-xs">
-                ~{smsMeta.segments} segment{smsMeta.segments === 1 ? "" : "s"}{" "}
-                ({smsMeta.segSize}-char units)
-              </p>
-            </div>
+            <p className="hidden text-[11px] text-muted-foreground md:block">
+              Templates & tone live in <span className="font-medium text-foreground">Draft options</span>.
+            </p>
             <Textarea
               value={smsBody}
               onChange={(e) => { setSmsBody(e.target.value); }}
@@ -600,18 +647,9 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
           </TabsContent>
 
           <TabsContent value="email" className="mt-2 space-y-2 md:mt-2.5">
-            <Select onValueChange={applyTemplateEmail}>
-              <SelectTrigger className="min-h-9 w-full rounded-xl md:max-w-sm">
-                <SelectValue placeholder="Insert template" />
-              </SelectTrigger>
-              <SelectContent>
-                {EMAIL_TEMPLATES.map((t) => (
-                  <SelectItem key={t.label} value={t.label}>
-                    {t.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <p className="hidden text-[11px] text-muted-foreground md:block">
+              Templates & tone live in <span className="font-medium text-foreground">Draft options</span>.
+            </p>
             <Input
               value={emailSubject}
               onChange={(e) => { setEmailSubject(e.target.value); }}
@@ -627,9 +665,6 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
               className="min-h-[120px] rounded-xl border-border py-2.5 text-sm leading-snug md:min-h-[150px] md:rounded-2xl"
               aria-label="Email body"
             />
-            <p className="text-[11px] leading-snug text-muted-foreground md:text-xs">
-              Attachments are disabled in Phase 1 — README explains why.
-            </p>
             <div className="flex justify-end">
               <Button
                 type="button"
@@ -648,6 +683,6 @@ export function UnifiedComposer({ candidate }: { candidate: Candidate }) {
         </Tabs>
       </Card>
       </div>
-    </>
+    </div>
   );
 }

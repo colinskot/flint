@@ -12,6 +12,14 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { Clipboard, Loader2, Sparkles } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
@@ -342,112 +350,121 @@ export function RecruiterAiToolkit({
   );
 
   return (
-    <Card className="border-border shadow-sm">
-      <div className="border-b border-border px-4 py-3 md:px-5">
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2 text-primary">
-            <Sparkles className="size-4" aria-hidden />
-            <div>
-              <p className="text-sm font-semibold text-foreground">
-                AI copilot (mock APIs)
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Tabbed recruiter assists via <code className="font-mono text-[11px]">POST /api/recruiter-assist</code>.
-                Compose drafts separately with <strong className="font-medium text-foreground">AI draft</strong> in the composer ({" "}
-                <code className="font-mono text-[11px]">/api/compose</code> + optional{" "}
-                <code className="font-mono text-[11px]">OPENAI_API_KEY</code>
-                ).
-              </p>
-            </div>
-          </div>
-          <Badge variant="secondary" className="uppercase tracking-wide">
-            Deterministic mocks
-          </Badge>
-        </div>
-      </div>
-
-      <div className="px-4 py-3 md:px-5 md:py-4">
-        <Tabs
-          value={active}
-          onValueChange={(value) => { setActive(value as RecruiterAssistAction); }}
-          className="w-full gap-4"
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="h-8 shrink-0 gap-1.5 rounded-xl px-3 text-xs md:h-9 md:text-sm"
         >
-          <TabsList className="flex w-full flex-nowrap justify-start gap-1 overflow-x-auto rounded-xl bg-muted/80 p-1 md:flex-wrap md:justify-start md:gap-2">
-            {TABS.map((tab) => (
-              <TabsTrigger
-                key={tab.id}
-                value={tab.id}
-                className="whitespace-nowrap rounded-lg px-3 py-2 text-[11px] uppercase tracking-wide data-[state=active]:shadow-sm md:text-xs"
-              >
-                {tab.title}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <Sparkles className="size-3.5 md:size-4" aria-hidden />
+          Copilot
+        </Button>
+      </SheetTrigger>
+      <SheetContent
+        side="right"
+        className="flex w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-xl md:max-w-2xl"
+      >
+        <SheetHeader className="shrink-0 border-b border-border px-4 py-4 pr-12">
+          <div className="flex flex-wrap items-center gap-2">
+            <SheetTitle className="text-left">AI copilot</SheetTitle>
+            <Badge variant="secondary" className="uppercase tracking-wide">
+              Mock APIs
+            </Badge>
+          </div>
+          <SheetDescription className="text-left">
+            Recruiter assists via{" "}
+            <code className="font-mono text-[11px]">POST /api/recruiter-assist</code>. Message drafts use{" "}
+            <strong className="font-medium text-foreground">AI draft</strong> in the composer (
+            <code className="font-mono text-[11px]">/api/compose</code>).
+          </SheetDescription>
+        </SheetHeader>
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+          <Tabs
+            value={active}
+            onValueChange={(value) => {
+              setActive(value as RecruiterAssistAction);
+            }}
+            className="w-full gap-4"
+          >
+            <TabsList className="flex w-full flex-nowrap justify-start gap-1 overflow-x-auto rounded-xl bg-muted/80 p-1 md:flex-wrap md:justify-start md:gap-2">
+              {TABS.map((tab) => (
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  className="whitespace-nowrap rounded-lg px-3 py-2 text-[11px] uppercase tracking-wide data-[state=active]:shadow-sm md:text-xs"
+                >
+                  {tab.title}
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-          {TABS.map((tab) => {
-            const snapshot = results[tab.id];
-            return (
-            <TabsContent key={tab.id} value={tab.id}>
-              <p className="text-xs leading-snug text-muted-foreground">
-                {tab.description}
-              </p>
-              <Separator className="my-4" />
+            {TABS.map((tab) => {
+              const snapshot = results[tab.id];
+              return (
+                <TabsContent key={tab.id} value={tab.id}>
+                  <p className="text-xs leading-snug text-muted-foreground">{tab.description}</p>
+                  <Separator className="my-4" />
 
-              {tab.id === "compliance_scan" && (
-                <div className="mb-4 space-y-2">
-                  <p className="text-xs font-medium text-foreground">
-                    Optional draft snippet
-                  </p>
-                  <Textarea
-                    value={draftSnippet}
-                    onChange={(e) => { setDraftSnippet(e.target.value); }}
-                    placeholder="Paste the SMS/email you are about to send for an extra heuristic scan."
-                    className="rounded-xl border-border text-sm leading-snug"
-                    rows={3}
-                  />
-                </div>
-              )}
+                  {tab.id === "compliance_scan" && (
+                    <div className="mb-4 space-y-2">
+                      <p className="text-xs font-medium text-foreground">Optional draft snippet</p>
+                      <Textarea
+                        value={draftSnippet}
+                        onChange={(e) => {
+                          setDraftSnippet(e.target.value);
+                        }}
+                        placeholder="Paste the SMS/email you are about to send for an extra heuristic scan."
+                        className="rounded-xl border-border text-sm leading-snug"
+                        rows={3}
+                      />
+                    </div>
+                  )}
 
-              {tab.id === "call_transcript_summary" && (
-                <div className="mb-4 space-y-2">
-                  <p className="text-xs font-medium text-foreground">
-                    Paste transcript excerpt (demo)
-                  </p>
-                  <Textarea
-                    value={transcriptSnippet}
-                    onChange={(e) => { setTranscriptSnippet(e.target.value); }}
-                    placeholder="Paste a VOIP transcript slice — or leave empty to synthesize notes from last logged call."
-                    className="rounded-xl border-border text-sm leading-snug"
-                    rows={4}
-                  />
-                </div>
-              )}
+                  {tab.id === "call_transcript_summary" && (
+                    <div className="mb-4 space-y-2">
+                      <p className="text-xs font-medium text-foreground">Paste transcript excerpt (demo)</p>
+                      <Textarea
+                        value={transcriptSnippet}
+                        onChange={(e) => {
+                          setTranscriptSnippet(e.target.value);
+                        }}
+                        placeholder="Paste a VOIP transcript slice — or leave empty to synthesize notes from last logged call."
+                        className="rounded-xl border-border text-sm leading-snug"
+                        rows={4}
+                      />
+                    </div>
+                  )}
 
-              <Button
-                type="button"
-                size="sm"
-                className="gap-2 rounded-xl"
-                disabled={busy}
-                onClick={() => { void runAssist(tab.id); }}
-              >
-                {busy ? (
-                  <Loader2 className="size-4 animate-spin" aria-hidden />
-                ) : (
-                  <Sparkles className="size-4" aria-hidden />
-                )}
-                Generate insights
-              </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    className="gap-2 rounded-xl"
+                    disabled={busy}
+                    onClick={() => {
+                      void runAssist(tab.id);
+                    }}
+                  >
+                    {busy ? (
+                      <Loader2 className="size-4 animate-spin" aria-hidden />
+                    ) : (
+                      <Sparkles className="size-4" aria-hidden />
+                    )}
+                    Generate insights
+                  </Button>
 
-              {snapshot ? (
-                <ScrollArea className="mt-4 max-h-[360px] pr-4">
-                  <ResultPanel payload={snapshot} />
-                </ScrollArea>
-              ) : null}
-            </TabsContent>
-            );
-          })}
-        </Tabs>
-      </div>
-    </Card>
+                  {snapshot ? (
+                    <ScrollArea className="mt-4 max-h-[min(360px,50dvh)] pr-4">
+                      <ResultPanel payload={snapshot} />
+                    </ScrollArea>
+                  ) : null}
+                </TabsContent>
+              );
+            })}
+          </Tabs>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
