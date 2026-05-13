@@ -1,13 +1,26 @@
 "use client";
 
 import { DEMO_NOW_MS, SEED_CANDIDATES } from "@/data/seed";
-import { filterSortCandidates } from "@/lib/candidates-query";
+import {
+  candidatesFilterOptions,
+  DEFAULT_CANDIDATES_LIST_CRITERIA,
+  filterSortCandidates,
+  type CandidatesListSort,
+} from "@/lib/candidates-query";
 import { usePortal } from "@/context/portal-context";
-import type { TimelineMessage } from "@/lib/types";
+import type { CandidateStatus, TimelineMessage } from "@/lib/types";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowRight, MessagesSquare } from "lucide-react";
@@ -22,6 +35,15 @@ const statusVariant = {
   new: "secondary" as const,
   active: "default" as const,
   waiting: "outline" as const,
+};
+
+const sortLabels: Record<CandidatesListSort, string> = {
+  last_touch_desc: "Last updated · newest",
+  last_touch_asc: "Last updated · oldest",
+  name_asc: "Name · A → Z",
+  name_desc: "Name · Z → A",
+  specialty_asc: "Specialty · A → Z",
+  license_asc: "License state · A → Z",
 };
 
 function initials(first: string, last: string) {
@@ -48,8 +70,20 @@ function lastPreview(last: TimelineMessage | undefined): string {
 
 export function CandidatesDirectory() {
   const [q, setQ] = useState("");
+  const [status, setStatus] = useState<CandidateStatus | "all">(DEFAULT_CANDIDATES_LIST_CRITERIA.status);
+  const [specialty, setSpecialty] = useState<string>(DEFAULT_CANDIDATES_LIST_CRITERIA.specialty);
+  const [licenseState, setLicenseState] = useState<string>(
+    DEFAULT_CANDIDATES_LIST_CRITERIA.licenseState,
+  );
+  const [sort, setSort] = useState<CandidatesListSort>(DEFAULT_CANDIDATES_LIST_CRITERIA.sort);
+
+  const { specialties, licenseStates } = useMemo(() => candidatesFilterOptions(), []);
+
   const { messagesFor } = usePortal();
-  const filtered = useMemo(() => filterSortCandidates(q), [q]);
+  const filtered = useMemo(
+    () => filterSortCandidates({ query: q, status, specialty, licenseState, sort }),
+    [licenseState, q, sort, specialty, status],
+  );
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-[var(--canvas)]">
@@ -66,13 +100,128 @@ export function CandidatesDirectory() {
             or call logging. Showing {filtered.length} of {SEED_CANDIDATES.length} seeded profiles (synthetic demo
             data only).
           </p>
-          <Input
-            value={q}
-            onChange={(e) => { setQ(e.target.value); }}
-            placeholder="Filter by name, specialty, license, email…"
-            aria-label="Filter candidates"
-            className="mt-5 max-w-lg rounded-xl border-border bg-card"
-          />
+          <div className="mt-5 space-y-4">
+            <Input
+              value={q}
+              onChange={(e) => {
+                setQ(e.target.value);
+              }}
+              placeholder="Search name, specialty, license, email, timezone…"
+              aria-label="Search candidates"
+              className="max-w-lg rounded-xl border-border bg-card"
+            />
+
+            <div className="flex flex-wrap gap-4 md:gap-5">
+              <div className="flex min-w-[9.5rem] flex-col gap-1.5">
+                <Label htmlFor="cand-filter-status" className="text-xs text-muted-foreground">
+                  Status
+                </Label>
+                <Select
+                  value={status}
+                  onValueChange={(v) => {
+                    setStatus(v as CandidateStatus | "all");
+                  }}
+                >
+                  <SelectTrigger
+                    id="cand-filter-status"
+                    size="sm"
+                    className="w-full rounded-xl border-border bg-card"
+                  >
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All statuses</SelectItem>
+                    <SelectItem value="new">{statusLabel.new}</SelectItem>
+                    <SelectItem value="active">{statusLabel.active}</SelectItem>
+                    <SelectItem value="waiting">{statusLabel.waiting}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex min-w-[10.5rem] flex-1 flex-col gap-1.5 sm:min-w-[12rem]">
+                <Label htmlFor="cand-filter-specialty" className="text-xs text-muted-foreground">
+                  Specialty
+                </Label>
+                <Select
+                  value={specialty}
+                  onValueChange={(v) => {
+                    setSpecialty(v);
+                  }}
+                >
+                  <SelectTrigger
+                    id="cand-filter-specialty"
+                    size="sm"
+                    className="w-full rounded-xl border-border bg-card"
+                  >
+                    <SelectValue placeholder="Specialty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All specialties</SelectItem>
+                    {specialties.map((s) => (
+                      <SelectItem key={s} value={s}>
+                        {s}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex min-w-[10.5rem] flex-1 flex-col gap-1.5 sm:min-w-[12rem]">
+                <Label htmlFor="cand-filter-license" className="text-xs text-muted-foreground">
+                  License state
+                </Label>
+                <Select
+                  value={licenseState}
+                  onValueChange={(v) => {
+                    setLicenseState(v);
+                  }}
+                >
+                  <SelectTrigger
+                    id="cand-filter-license"
+                    size="sm"
+                    className="w-full rounded-xl border-border bg-card"
+                  >
+                    <SelectValue placeholder="License" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All license states</SelectItem>
+                    {licenseStates.map((ls) => (
+                      <SelectItem key={ls} value={ls}>
+                        {ls}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex min-w-[12rem] flex-1 flex-col gap-1.5 sm:min-w-[14rem]">
+                <Label htmlFor="cand-sort" className="text-xs text-muted-foreground">
+                  Sort
+                </Label>
+                <Select
+                  value={sort}
+                  onValueChange={(v) => {
+                    setSort(v as CandidatesListSort);
+                  }}
+                >
+                  <SelectTrigger
+                    id="cand-sort"
+                    size="sm"
+                    className="w-full rounded-xl border-border bg-card"
+                  >
+                    <SelectValue placeholder="Sort" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(Object.keys(sortLabels) as CandidatesListSort[]).map((key) => (
+                      <SelectItem key={key} value={key}>
+                        {sortLabels[key]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
         </div>
 
         <ul className="grid gap-3 sm:grid-cols-2 lg:gap-4 xl:grid-cols-2">
@@ -128,7 +277,7 @@ export function CandidatesDirectory() {
 
         {filtered.length === 0 && (
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            No matches — try a different keyword.
+            No matches — adjust filters or search terms.
           </p>
         )}
       </div>

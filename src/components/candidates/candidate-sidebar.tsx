@@ -1,7 +1,7 @@
 "use client";
 
 import { DEMO_NOW_MS } from "@/data/seed";
-import { filterSortCandidates } from "@/lib/candidates-query";
+import { DEFAULT_CANDIDATES_LIST_CRITERIA, filterSortCandidates } from "@/lib/candidates-query";
 import { usePortal } from "@/context/portal-context";
 import type { TimelineMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -50,7 +50,10 @@ export function CandidateSidebar({ className }: { className?: string }) {
   const [q, setQ] = useState("");
   const { messagesFor } = usePortal();
 
-  const filtered = useMemo(() => filterSortCandidates(q), [q]);
+  const filtered = useMemo(
+    () => filterSortCandidates({ ...DEFAULT_CANDIDATES_LIST_CRITERIA, query: q }),
+    [q],
+  );
 
   return (
     <div
