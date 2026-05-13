@@ -27,7 +27,9 @@ pnpm install
 pnpm dev
 ```
 
-Visit `http://localhost:3000` — routes through `/candidates` into the first seeded thread.
+Visit **`http://localhost:3000`** — you land on the **`/candidates` hub** (filterable roster). Choosing **Open workspace** dives into **`/candidates/[candidateId]`** for profile summary, mocked AI tooling, chronological activity, and the unified composer.
+
+**Visible design specimen page:** [`/design-system`](https://flint-revery-trail.vercel.app/design-system) *(swap host for local dev)* — palette swatches, type scale, primitives, shell preview.
 
 Production build locally:
 
@@ -46,14 +48,14 @@ pnpm start
 - **TypeScript**
 - **Tailwind CSS v4** (`@tailwindcss/postcss`)
 - **shadcn/ui** primitives (Radix + CSS variables theme)
-- **Vercel AI SDK** (`ai`, `@ai-sdk/openai`) for the optional drafting route
+- **Vercel AI SDK** (`ai`, `@ai-sdk/openai`) — optional GPT path for drafts + deterministic mocks elsewhere
 - **pnpm** for installs and locks ([`pnpm-lock.yaml`](pnpm-lock.yaml))
 
 ---
 
 ## Design system — Flint palette
 
-Semantic tokens live in `[src/app/globals.css](src/app/globals.css)`. Core brand literals from the brief:
+Semantic tokens live in [`src/app/globals.css`](src/app/globals.css). Core brand literals from the brief:
 
 | Token intent | Hex | Typical usage |
 | --- | --- | --- |
@@ -61,24 +63,45 @@ Semantic tokens live in `[src/app/globals.css](src/app/globals.css)`. Core brand
 | Plum (primary UI) | `#44376d` | Primary buttons, headings, outlines (`--primary`, `--foreground` tone) |
 | Sky accent | `#a7c8f9` | Avatars/highlights/interactive chrome (`--accent`) |
 
-Supporting neutrals (`--border`, `--muted`, `--card`) were chosen so text on `#f9f1ed` remains readable (WCAG-style contrast pass recommended before production).
+Supporting neutrals (`--border`, `--muted`, `--card`, `--muted-foreground`) prioritize recruiter readability against the canvas.
 
-Rounded geometry (`rounded-2xl`), soft borders, and the official word-mark (`[public/branding/](public/branding/)`) reinforce the recruiter-facing brand cues from the Flint brief.
+Rounded geometry (`rounded-2xl` family), soft borders, and assets in [`public/branding/`](public/branding/) reinforce the recruiter-facing brand cues from the Flint brief.
 
-Components are predominantly shadcn-based (`button`, `card`, `tabs`, `toast`, …) with small domain components under `src/components/`.
+**Reviewers:** open **`/design-system`** on any deployment host for annotated swatches plus component specimens (buttons, badges, inputs, shell preview).
+
+Components are predominantly shadcn-based (`button`, `card`, `tabs`, `toast`, …) with domain components under `src/components/`.
 
 ---
 
-## AI draft assistant
+## AI surface area (compose + mocks)
 
-Tap **AI draft** in the composer footer. It fills the active **SMS or Email** tab using:
+Everything below is deliberately **frontend-only**. Never ship PHI into these mocks.
+
+### 1 · Composer drafts — `POST /api/compose`
+
+Tap **AI draft** in the composer (SMS/email tabs):
 
 1. Structured JSON (`/api/compose`) when `OPENAI_API_KEY` is present.
-2. Deterministic recruiter templates (**fallback**) when no key exists — reviewers still feel the UX.
+2. Deterministic recruiter templates (**fallback**) when no key exists — demos still land.
 
-Tone controls (professional / friendly / urgent) tweak both paths.
+Tone controls (**professional · friendly · urgent**) influence both GPT + fallback text.
 
-Configure locally:
+### 2 · Recruiter copilot — `POST /api/recruiter-assist`
+
+Above **Activity**, the **AI copilot (mock APIs)** tabs call `/api/recruiter-assist` with `{ mock: true, result: … }`:
+
+| Capability | Purpose |
+| --- | --- |
+| **Recap** | Condense recent thread stats + open items |
+| **Prep** | Checklist + suggested opener |
+| **Guardrails** | Heuristic scans for risky claims (+ optional pasted draft) |
+| **Schedule** | Mock smart windows anchored to candidate TZ |
+| **Triage** | Deterministic “pursuit score” heuristic (demo-only) |
+| **Notes / transcript** | Paste VOIP text or synthesize from last simulated call |
+
+> **Architecture note:** Composing live messages stays on `/api/compose`; exploratory assists stay on `/api/recruiter-assist` until you unify backends in Phase 2.
+
+Configure GPT locally *(optional)*:
 
 ```bash
 cp .env.example .env.local
@@ -89,7 +112,7 @@ cp .env.example .env.local
 
 ## Assumptions & limitations (Phase 1)
 
-- Candidate rows + baseline messages are **synthetic nurse profiles** seeded in `[src/data/seed.ts](src/data/seed.ts)` — never real PHI.
+- Candidate rows + baseline messages are **synthetic nurse profiles** seeded in [`src/data/seed.ts`](src/data/seed.ts) — never real PHI.
 - **SMS/email “Send” buttons** persist only to browser `localStorage` (plus seed history) — there is **no SMS gateway / SMTP**.
 - Calls are UI-only (**no carrier / WebRTC**) with timeline logging for recruiter accountability narrative.
 - **Email attachments**: UI stub/disabled (`UnifiedComposer`) — uploads would need signed URLs + persistence in Phase 2.
@@ -108,9 +131,10 @@ cp .env.example .env.local
 
 ## Screen recording checklist (your deliverable)
 
-1. Outline product decisions (why unified composer, templates, segmented SMS counter, call disposition).
-2. Walk candidate list → timeline → simulate send/logging.
-3. Demo AI draft toggling tone + fallback (show `.env.local` presence/absence sparingly — **never expose secret on video**).
+1. Outline product decisions (**Candidates hub first**, profile card + AI mocks, unified composer below activity, segmented SMS tooling, disposition logging narrative).
+2. Walk **`/design-system`** (foundations/components/surfaces) then **`/candidates` → `/candidates/[id]`** → simulated send/logging.
+3. Demo **AI draft** with tone shifts + clarify fallback (`OPENAI_API_KEY` omitted) vs optional GPT (**never expose secrets on camera**).
+4. Walk **AI copilot tabs** emphasizing deterministic `/api/recruiter-assist` payloads.
 
 ---
 
@@ -128,12 +152,14 @@ cp .env.example .env.local
 ## Project structure highlights
 
 ```
-pnpm-workspace.yaml    pnpm allowBuilds for native toolchain deps (e.g. sharp)
-src/app/(app)          recruiter shell routes
-src/app/api/compose    AI + fallback drafting
-src/components/        layout, timeline, composers
+pnpm-workspace.yaml      pnpm allowBuilds for native toolchain deps (e.g. sharp)
+src/app/(app)            recruiter shell (TopBar + sidebar + routes)
+src/app/design-system    public gallery showcasing tokens + primitives
+src/app/api/compose      optional GPT + fallback drafts
+src/app/api/recruiter-assist deterministic mocked assists
+src/components/          layout, overview, timeline, composers, ai toolkit
 src/context/portal-context.tsx → local persistence + seeded merge
-src/data/seed.ts       mock nurses + seeded timeline slices
+src/data/seed.ts         mock nurses + seeded timeline slices
 ```
 
 ---
