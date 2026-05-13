@@ -14,36 +14,42 @@ import {
 import { CandidateSidebar } from "@/components/candidates/candidate-sidebar";
 import { usePortal } from "@/context/portal-context";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { usesStandaloneCandidateChrome } from "@/lib/app-chrome";
 
 export function TopBar() {
   const { resetDemo } = usePortal();
+  const pathname = usePathname();
+  const showMobileCandidateNav = !usesStandaloneCandidateChrome(pathname);
 
   return (
     <header className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-4 py-2 md:gap-4 md:px-6 md:py-3">
       <div className="flex min-w-0 items-center gap-3 md:gap-4">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="shrink-0 rounded-xl md:hidden"
-              aria-label="Open candidates"
-            >
-              <Menu className="size-5" aria-hidden />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-[min(100%,20rem)] p-0">
-            <SheetHeader className="sr-only">
-              <SheetTitle>Candidates</SheetTitle>
-              <SheetDescription>
-                Search or pick a candidate to open their recruiter thread.
-              </SheetDescription>
-            </SheetHeader>
-            <CandidateSidebar className="h-full border-0" />
-          </SheetContent>
-        </Sheet>
+        {showMobileCandidateNav ? (
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="shrink-0 rounded-xl md:hidden"
+                aria-label="Open candidates"
+              >
+                <Menu className="size-5" aria-hidden />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[min(100%,20rem)] p-0">
+              <SheetHeader className="sr-only">
+                <SheetTitle>Candidates</SheetTitle>
+                <SheetDescription>
+                  Search or pick a candidate to open their recruiter thread.
+                </SheetDescription>
+              </SheetHeader>
+              <CandidateSidebar className="h-full border-0" />
+            </SheetContent>
+          </Sheet>
+        ) : null}
 
-        <Link href="/candidates/cand-01" className="flex min-w-0 items-center gap-3">
+        <Link href="/candidates" className="flex min-w-0 items-center gap-3">
           <Image
             src="/branding/logo-mark.png"
             alt="Flint"
@@ -54,16 +60,19 @@ export function TopBar() {
           />
           <div className="hidden min-w-0 sm:block">
             <p className="truncate text-sm font-semibold text-foreground">
-              Recruiter communication
+              Recruiter portal
             </p>
             <p className="truncate text-xs text-muted-foreground">
-              SMS · Email · Call (Phase 1 demo)
+              Candidates hub · SMS · email · calls (Phase 1)
             </p>
           </div>
         </Link>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+        <Button variant="ghost" size="sm" className="rounded-xl text-xs" asChild>
+          <Link href="/design-system">Design system</Link>
+        </Button>
         <Button
           type="button"
           variant="ghost"

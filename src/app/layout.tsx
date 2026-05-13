@@ -30,7 +30,7 @@ export default function RootLayout({
       lang="en"
       className={`${dmSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-background font-sans text-foreground">
+      <body className="min-h-full bg-background font-sans text-base text-foreground">
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

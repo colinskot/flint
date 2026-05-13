@@ -2,14 +2,11 @@
 
 import { CandidateSidebar } from "@/components/candidates/candidate-sidebar";
 import { usePathname } from "next/navigation";
-
-function isCandidatesIndex(pathname: string) {
-  return pathname === "/candidates" || pathname === "/candidates/";
-}
+import { usesStandaloneCandidateChrome } from "@/lib/app-chrome";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const hideSidebar = isCandidatesIndex(pathname);
+  const hideSidebar = usesStandaloneCandidateChrome(pathname);
 
   return (
     <div className="flex min-h-0 flex-1">

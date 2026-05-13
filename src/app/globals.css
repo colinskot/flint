@@ -64,7 +64,7 @@
   --secondary: #ede4f7;
   --secondary-foreground: #44376d;
   --muted: #f0e8e3;
-  --muted-foreground: #5c5470;
+  --muted-foreground: #524a63;
   --accent: #a7c8f9;
   --accent-foreground: #2a2145;
   --destructive: #b42318;
@@ -91,11 +91,13 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
   html {
     @apply font-sans;
+    /* ~17px at typical 16px browser default — scales Tailwind rem-based sizes */
+    font-size: 106.25%;
+  }
+  body {
+    @apply bg-background text-foreground font-medium;
   }
 
   /**
