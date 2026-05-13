@@ -6,10 +6,6 @@ Live demo (**production**): **`https://flint-revery-trail.vercel.app`**
 
 Alternative production aliases resolve to the same deployment: **`https://flint-kohl.vercel.app`** · **`https://flint-colinskot-revery-trail.vercel.app`**.
 
-Inspect deployment: [Vercel — revery-trail/flint](https://vercel.com/revery-trail/flint/9KkVVuJ1CwY33bP6XZKjR42uw2Tw).
-
-Share the repo with **`@heliobentes`** (GitHub) per the take-home instructions.
-
 ---
 
 ## Quick start
@@ -57,11 +53,11 @@ pnpm start
 
 Semantic tokens live in [`src/app/globals.css`](src/app/globals.css). Core brand literals from the brief:
 
-| Token intent | Hex | Typical usage |
-| --- | --- | --- |
-| Canvas / backdrop | `#f9f1ed` | Page background `--background`, `--canvas` |
+| Token intent      | Hex       | Typical usage                                                          |
+| ----------------- | --------- | ---------------------------------------------------------------------- |
+| Canvas / backdrop | `#f9f1ed` | Page background `--background`, `--canvas`                             |
 | Plum (primary UI) | `#44376d` | Primary buttons, headings, outlines (`--primary`, `--foreground` tone) |
-| Sky accent | `#a7c8f9` | Avatars/highlights/interactive chrome (`--accent`) |
+| Sky accent        | `#a7c8f9` | Avatars/highlights/interactive chrome (`--accent`)                     |
 
 Supporting neutrals (`--border`, `--muted`, `--card`, `--muted-foreground`) prioritize recruiter readability against the canvas.
 
@@ -90,14 +86,14 @@ Tone controls (**professional · friendly · urgent**) influence both GPT + fall
 
 Above **Activity**, the **AI copilot (mock APIs)** tabs call `/api/recruiter-assist` with `{ mock: true, result: … }`:
 
-| Capability | Purpose |
-| --- | --- |
-| **Recap** | Condense recent thread stats + open items |
-| **Prep** | Checklist + suggested opener |
-| **Guardrails** | Heuristic scans for risky claims (+ optional pasted draft) |
-| **Schedule** | Mock smart windows anchored to candidate TZ |
-| **Triage** | Deterministic “pursuit score” heuristic (demo-only) |
-| **Notes / transcript** | Paste VOIP text or synthesize from last simulated call |
+| Capability             | Purpose                                                    |
+| ---------------------- | ---------------------------------------------------------- |
+| **Recap**              | Condense recent thread stats + open items                  |
+| **Prep**               | Checklist + suggested opener                               |
+| **Guardrails**         | Heuristic scans for risky claims (+ optional pasted draft) |
+| **Schedule**           | Mock smart windows anchored to candidate TZ                |
+| **Triage**             | Deterministic “pursuit score” heuristic (demo-only)        |
+| **Notes / transcript** | Paste VOIP text or synthesize from last simulated call     |
 
 > **Architecture note:** Composing live messages stays on `/api/compose`; exploratory assists stay on `/api/recruiter-assist` until you unify backends in Phase 2.
 
@@ -124,7 +120,7 @@ cp .env.example .env.local
 
 1. Push this repo to GitHub.
 2. Import in Vercel (framework preset detects Next.js; **`pnpm`** is inferred from **`pnpm-lock.yaml`**).
-3. Add env var **`OPENAI_API_KEY`** _(optional)_ for live AI drafts; optional without it thanks to fallback drafts.
+3. Add env var **`OPENAI_API_KEY`** *(optional)* for live AI drafts; optional without it thanks to fallback drafts.
 4. Deploy — drop the canonical URL near the top of this README once ready.
 
 ---
@@ -140,12 +136,12 @@ cp .env.example .env.local
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Local dev (`next dev`) |
+| Command      | Description            |
+| ------------ | ---------------------- |
+| `pnpm dev`   | Local dev (`next dev`) |
 | `pnpm build` | Production compilation |
-| `pnpm start` | Serve `.next` output |
-| `pnpm lint` | ESLint |
+| `pnpm start` | Serve `.next` output   |
+| `pnpm lint`  | ESLint                 |
 
 ---
 
