@@ -15,7 +15,8 @@ function hoursBeforeAnchor(hours: number): string {
   return new Date(ms).toISOString();
 }
 
-export const SEED_CANDIDATES: Candidate[] = [
+/** Hand-authored demo rows referenced by `SEED_TIMELINE` — keep ids cand-01 … cand-05 stable. */
+const SEED_CANDIDATES_CORE: Candidate[] = [
   {
     id: "cand-01",
     firstName: "María",
@@ -81,6 +82,245 @@ export const SEED_CANDIDATES: Candidate[] = [
     status: "waiting",
     lastTouchAt: hoursBeforeAnchor(6),
   },
+];
+
+const DEMO_FIRST_NAMES = [
+  "María",
+  "James",
+  "Priya",
+  "Elena",
+  "Daniel",
+  "Aisha",
+  "Wei",
+  "Olivia",
+  "Marcus",
+  "Sofia",
+  "Henry",
+  "Yuki",
+  "Amir",
+  "Zara",
+  "Luis",
+  "Hannah",
+  "Diego",
+  "Fatima",
+  "Noah",
+  "Keisha",
+  "Jonas",
+  "Min-jun",
+  "Chloe",
+  "Ibrahim",
+  "Grace",
+  "Mateo",
+  "Nia",
+  "Raj",
+  "Camila",
+  "Theo",
+  "Brianna",
+  "Samir",
+  "Rachel",
+  "Pavel",
+  "Tanya",
+  "Oscar",
+  "Leilani",
+  "Viktor",
+  "Anika",
+  "Jordan",
+  "Cooper",
+  "Esperanza",
+];
+
+const DEMO_LAST_NAMES = [
+  "González",
+  "Okonkwo",
+  "Nair",
+  "Varga",
+  "Kim",
+  "Patel",
+  "Johnson",
+  "Martinez",
+  "Okafor",
+  "Silva",
+  "Chen",
+  "Nguyen",
+  "Hassan",
+  "Bergstrom",
+  "Rivera",
+  "Olsen",
+  "Fernández",
+  "Al-Farsi",
+  "Williams",
+  "Schmidt",
+  "Santos",
+  "Nakamura",
+  "Cohen",
+  "Murphy",
+  "Kowalski",
+  "Diallo",
+  "Park",
+  "Romano",
+  "Andersen",
+  "Owens",
+  "Duarte",
+  "Lindqvist",
+  "O’Connell",
+  "Popov",
+  "Watanabe",
+  "Okoro",
+  "Bautista",
+  "Kaminski",
+  "Desai",
+  "Bishop",
+  "Zhang",
+  "Morales",
+  "Kaur",
+  "Mensah",
+  "Vasquez",
+];
+
+const DEMO_SPECIALTIES = [
+  "Med-Surg RN",
+  "ICU RN",
+  "ER RN",
+  "OR RN",
+  "Stepdown RN",
+  "Telemetry RN",
+  "PACU RN",
+  "NICU RN",
+  "L&D RN",
+  "Mother-Baby RN",
+  "Psych RN",
+  "Cath Lab RN",
+  "IR RN",
+  "Dialysis RN",
+  "Home Health RN",
+  "School Nurse",
+  "NP — Family",
+  "NP — Acute Care",
+  "Clinical Nurse Educator",
+  "Float Pool RN",
+  "CVICU RN",
+  "MICU RN",
+  "SICU RN",
+  "Burn Unit RN",
+  "Transplant RN",
+  "Oncology RN",
+  "Infusion RN",
+  "Urgent Care RN",
+  "SNF RN",
+  "Rehab RN",
+  "Hemodialysis RN",
+  "Perioperative RN",
+  "Case Manager RN",
+  "Travel Med-Surg",
+  "Travel ICU",
+  "OB Tech / RN",
+  "Peds RN",
+  "PICU RN",
+  "Wound Care RN",
+  "Endoscopy RN",
+];
+
+const DEMO_STATE_TZ: { licenseState: string; timezone: string }[] = [
+  { licenseState: "CA", timezone: "America/Los_Angeles" },
+  { licenseState: "NY", timezone: "America/New_York" },
+  { licenseState: "TX (compact)", timezone: "America/Chicago" },
+  { licenseState: "FL", timezone: "America/New_York" },
+  { licenseState: "WA", timezone: "America/Los_Angeles" },
+  { licenseState: "IL", timezone: "America/Chicago" },
+  { licenseState: "PA", timezone: "America/New_York" },
+  { licenseState: "OH", timezone: "America/New_York" },
+  { licenseState: "GA", timezone: "America/New_York" },
+  { licenseState: "NC", timezone: "America/New_York" },
+  { licenseState: "MI", timezone: "America/Detroit" },
+  { licenseState: "AZ (compact)", timezone: "America/Phoenix" },
+  { licenseState: "CO", timezone: "America/Denver" },
+  { licenseState: "OR", timezone: "America/Los_Angeles" },
+  { licenseState: "NV", timezone: "America/Los_Angeles" },
+  { licenseState: "UT", timezone: "America/Denver" },
+  { licenseState: "NM", timezone: "America/Denver" },
+  { licenseState: "KS", timezone: "America/Chicago" },
+  { licenseState: "MO", timezone: "America/Chicago" },
+  { licenseState: "TN", timezone: "America/Chicago" },
+  { licenseState: "IN", timezone: "America/Indiana/Indianapolis" },
+  { licenseState: "KY", timezone: "America/New_York" },
+  { licenseState: "VA", timezone: "America/New_York" },
+  { licenseState: "SC", timezone: "America/New_York" },
+  { licenseState: "MA", timezone: "America/New_York" },
+  { licenseState: "ME", timezone: "America/New_York" },
+  { licenseState: "HI", timezone: "Pacific/Honolulu" },
+  { licenseState: "AK", timezone: "America/Anchorage" },
+  { licenseState: "WI", timezone: "America/Chicago" },
+  { licenseState: "MN", timezone: "America/Chicago" },
+  { licenseState: "IA", timezone: "America/Chicago" },
+  { licenseState: "NE", timezone: "America/Chicago" },
+  { licenseState: "OK", timezone: "America/Chicago" },
+  { licenseState: "AR", timezone: "America/Chicago" },
+  { licenseState: "LA", timezone: "America/Chicago" },
+  { licenseState: "MS", timezone: "America/Chicago" },
+  { licenseState: "AL", timezone: "America/Chicago" },
+  { licenseState: "ID", timezone: "America/Boise" },
+  { licenseState: "MT", timezone: "America/Denver" },
+  { licenseState: "WY", timezone: "America/Denver" },
+  { licenseState: "ND", timezone: "America/Chicago" },
+];
+
+const DEMO_STATUSES: Candidate["status"][] = ["new", "active", "waiting"];
+
+function slugEmailPart(s: string): string {
+  return s
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z]/g, "")
+    .toLowerCase();
+}
+
+function syntheticPhoneParts(index: number): { e164: string; display: string } {
+  const areaCodes = [
+    212, 310, 415, 503, 602, 615, 702, 713, 801, 904, 206, 303, 404, 512, 702,
+  ];
+  const ac = areaCodes[index % areaCodes.length];
+  const last4 = (index * 7919 + 240) % 10000;
+  const nnn = String(last4).padStart(4, "0");
+  return {
+    e164: `+1${String(ac)}555${nnn}`,
+    display: `(${String(ac)}) 555-${nnn}`,
+  };
+}
+
+function buildSyntheticCandidates(): Candidate[] {
+  const out: Candidate[] = [];
+  for (let i = 6; i <= 100; i++) {
+    const id = i === 100 ? "cand-100" : `cand-${String(i).padStart(2, "0")}`;
+    const fn = DEMO_FIRST_NAMES[(i * 13) % DEMO_FIRST_NAMES.length];
+    const ln = DEMO_LAST_NAMES[(i * 17 + 3) % DEMO_LAST_NAMES.length];
+    const spec = DEMO_SPECIALTIES[(i * 5) % DEMO_SPECIALTIES.length];
+    const st = DEMO_STATE_TZ[(i * 7) % DEMO_STATE_TZ.length];
+    const status = DEMO_STATUSES[i % DEMO_STATUSES.length];
+    const fnSlug = slugEmailPart(fn) || "n";
+    const lnSlug = slugEmailPart(ln) || "n";
+    const hoursBack = (i * 11 + (i % 23) * 7 + (i % 5) * 31) % 720;
+    const { e164, display } = syntheticPhoneParts(i);
+
+    out.push({
+      id,
+      firstName: fn,
+      lastName: ln,
+      email: `${fnSlug}.${lnSlug}.${String(i)}@example.com`,
+      phoneE164: e164,
+      phoneDisplay: display,
+      timezone: st.timezone,
+      licenseState: st.licenseState,
+      specialty: spec,
+      status,
+      lastTouchAt: hoursBeforeAnchor(hoursBack),
+    });
+  }
+  return out;
+}
+
+export const SEED_CANDIDATES: Candidate[] = [
+  ...SEED_CANDIDATES_CORE,
+  ...buildSyntheticCandidates(),
 ];
 
 /** Baseline inbound history — timestamps derived from anchor for stable SSR/client output */

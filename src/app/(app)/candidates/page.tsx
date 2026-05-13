@@ -1,6 +1,5 @@
-import { SEED_CANDIDATES } from "@/data/seed";
-import { redirect } from "next/navigation";
+import { CandidatesDirectory } from "@/components/candidates/candidates-directory";
 
 export default function CandidatesLandingPage() {
-  redirect(`/candidates/${SEED_CANDIDATES[0].id}`);
+  return <CandidatesDirectory />;
 }

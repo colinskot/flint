@@ -1,6 +1,7 @@
 "use client";
 
-import { DEMO_NOW_MS, SEED_CANDIDATES } from "@/data/seed";
+import { DEMO_NOW_MS } from "@/data/seed";
+import { filterSortCandidates } from "@/lib/candidates-query";
 import { usePortal } from "@/context/portal-context";
 import type { TimelineMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -49,17 +50,15 @@ export function CandidateSidebar({ className }: { className?: string }) {
   const [q, setQ] = useState("");
   const { messagesFor } = usePortal();
 
-  const filtered = useMemo(() => {
-    const needle = q.trim().toLowerCase();
-    return SEED_CANDIDATES.filter((c) => {
-      if (!needle) return true;
-      const blob = `${c.firstName} ${c.lastName} ${c.specialty} ${c.licenseState} ${c.email}`.toLowerCase();
-      return blob.includes(needle);
-    }).sort((a, b) => b.lastTouchAt.localeCompare(a.lastTouchAt));
-  }, [q]);
+  const filtered = useMemo(() => filterSortCandidates(q), [q]);
 
   return (
-    <div className={cn("flex flex-col border-r border-border bg-sidebar", className)}>
+    <div
+      className={cn(
+        "flex min-h-0 flex-col overflow-hidden border-r border-border bg-sidebar",
+        className,
+      )}
+    >
       <div className="p-4 pb-3">
         <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Candidates
@@ -72,7 +71,7 @@ export function CandidateSidebar({ className }: { className?: string }) {
           className="mt-3 rounded-xl border-border bg-card"
         />
       </div>
-      <ScrollArea className="flex-1 px-3">
+      <ScrollArea className="min-h-0 flex-1 px-3">
         <ul className="space-y-1 pb-4">
           {filtered.map((c) => {
             const active = pathname === `/candidates/${c.id}`;
