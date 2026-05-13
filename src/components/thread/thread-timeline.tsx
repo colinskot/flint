@@ -184,25 +184,22 @@ export function ThreadTimeline({
   messages: TimelineMessage[];
 }) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-[var(--canvas)]">
-      <div className="border-b border-border bg-card px-4 py-1.5 md:px-6 md:py-4">
-        <div className="flex items-center justify-between gap-2 md:block">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-t border-border/60 bg-[var(--canvas)]">
+      <div className="border-b border-border bg-card/90 px-4 py-2 md:px-6 md:py-3">
+        <div className="flex items-center justify-between gap-2">
           <div className="min-w-0 flex-1">
-            <h1 className="truncate text-base font-semibold tracking-tight text-foreground md:text-xl">
-              <span className="text-foreground">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              Activity · messages & calls
+            </p>
+            <h2 className="mt-0.5 truncate text-sm font-semibold text-foreground md:text-base">
+              Conversation with{" "}
+              <span className="text-primary">
                 {candidate.firstName} {candidate.lastName}
               </span>
-              <span className="font-normal text-muted-foreground md:hidden">
-                {` · ${candidate.specialty} · ${candidate.licenseState}`}
-              </span>
-            </h1>
-            <p className="mt-1 hidden text-sm text-muted-foreground md:block">
-              {candidate.specialty} · {candidate.licenseState} ·{" "}
-              {candidate.timezone.replaceAll("_", " ")}
-            </p>
-            <p className="mt-2 hidden text-xs text-muted-foreground md:block">
-              Demo workspace — data is synthetic. No PHI, no outbound carrier
-              integration.
+            </h2>
+            <p className="mt-1 text-[11px] leading-snug text-muted-foreground md:text-xs">
+              Chronological transcript (SMS, email stubs, simulated calls). Compose below when you&apos;re ready to
+              reach out — detail lives in the profile card above.
             </p>
           </div>
           <DropdownMenu>
@@ -212,7 +209,7 @@ export function ThreadTimeline({
                 variant="outline"
                 size="icon-sm"
                 className="shrink-0 rounded-xl md:hidden"
-                aria-label="Candidate details"
+                aria-label="Candidate contact snapshot"
               >
                 <Info className="size-4" aria-hidden />
               </Button>
